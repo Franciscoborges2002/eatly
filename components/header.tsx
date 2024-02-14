@@ -1,14 +1,21 @@
 import { Image, View, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import colors from "tailwindcss/colors";
+import { LinkButton } from "./link-button";
 
 /* Type for the props of the header */
 type HeaderProps = {
   title: string;
   cartQuantityItems?: number;
+  needCart: boolean;
 };
 
-export function Header({ title, cartQuantityItems = 0 }: HeaderProps) {
+export function Header({
+  title,
+  cartQuantityItems = 0,
+  needCart,
+}: HeaderProps) {
   return (
     <View
       className="flex-row
@@ -25,20 +32,26 @@ export function Header({ title, cartQuantityItems = 0 }: HeaderProps) {
         />
         <Text className="text-white text-xl font-heading mt-2">{title}</Text>
       </View>
-      {cartQuantityItems > 0 ? (
-        <TouchableOpacity className="relative" activeOpacity={0.7}>
-          <View className="bg-lime-300 w-4 h-4 rounded-full items-center justfy-center top-2 z-10 -right-3.5">
-            <Text className="text-slate-900 font-bold text-xs">
-              {cartQuantityItems}
-            </Text>
-          </View>
+      {cartQuantityItems > 0 && needCart ? (
+        <Link href="/cart" asChild>
+          <TouchableOpacity className="relative" activeOpacity={0.7}>
+            <View className="bg-lime-300 w-4 h-4 rounded-full items-center justfy-center top-2 z-10 -right-3.5">
+              <Text className="text-slate-900 font-bold text-xs">
+                {cartQuantityItems}
+              </Text>
+            </View>
 
-          <Feather name="shopping-bag" color={colors.white} size={24} />
-        </TouchableOpacity>
+            <Feather name="shopping-bag" color={colors.white} size={24} />
+          </TouchableOpacity>
+        </Link>
+      ) : needCart ? (
+        <Link href="/cart" asChild>
+          <TouchableOpacity className="relative" activeOpacity={0.7}>
+            <Feather name="shopping-bag" color={colors.white} size={24} />
+          </TouchableOpacity>
+        </Link>
       ) : (
-        <TouchableOpacity className="relative" activeOpacity={0.7}>
-          <Feather name="shopping-bag" color={colors.white} size={24} />
-        </TouchableOpacity>
+        <LinkButton title="Cardápio" href="/" />
       )}
     </View>
   );
